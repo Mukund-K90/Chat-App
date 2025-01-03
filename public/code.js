@@ -219,7 +219,6 @@
             const emojiPicker = new EmojiMart.Picker({
                 onEmojiSelect: (emoji) => {
                     messageInput.value += emoji.native;
-                    emojiPickerContainer.style.display = 'none';
                 },
             });
             emojiPickerContainer.innerHTML = '';
@@ -233,6 +232,52 @@
     document.addEventListener('click', (e) => {
         if (!emojiPickerContainer.contains(e.target) && !emojiButton.contains(e.target)) {
             emojiPickerContainer.style.display = 'none';
+        }
+    });
+
+    // Select elements
+    const contextMenu = document.getElementById('context-menu');
+    const editMessageOption = document.getElementById('edit-message');
+    const deleteMessageOption = document.getElementById('delete-message');
+    const cancelMenuOption = document.getElementById('cancel-menu');
+
+    let selectedMessage = null; // Track the currently selected message
+
+    // Right-click handler for messages
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        const target = e.target.closest('.message');
+        if (target) {
+            selectedMessage = target;
+            const { clientX: mouseX, clientY: mouseY } = e;
+            contextMenu.style.left = `${mouseX}px`;
+            contextMenu.style.top = `${mouseY}px`;
+            contextMenu.style.display = 'block';
+        } else {
+            contextMenu.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('click', () => {
+        contextMenu.style.display = 'none';
+    });
+
+    cancelMenuOption.addEventListener('click', () => {
+        selectedMessage = null;
+        contextMenu.style.display = 'none';
+    });
+
+    socket.on('edit-message', (data) => {
+        const message = document.querySelector(`.message[data-id="${data.id}"]`);
+        if (message) {
+            message.querySelector('.text').textContent = data.text;
+        }
+    });
+
+    socket.on('delete-message', (data) => {
+        const message = document.querySelector(`.message[data-id="${data.id}"]`);
+        if (message) {
+            message.remove();
         }
     });
 

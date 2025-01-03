@@ -298,3 +298,30 @@ body {
     color: #fff;
     font-size: 1.25rem;
 }
+
+.context-menu {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    font-size: 14px;
+    width: 150px;
+    padding: 5px 0;
+}
+
+.context-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context-menu ul li {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.context-menu ul li:hover {
+    background: #f0f0f0;
+}

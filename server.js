@@ -47,6 +47,13 @@ io.on('connection', function (socket) {
             socket.username = null;
         }
     });
+    socket.on('edit-message', (data) => {
+        socket.broadcast.emit('edit-message', data);
+    });
+
+    socket.on('delete-message', (data) => {
+        socket.broadcast.emit('delete-message', data);
+    });
 });
 
 
