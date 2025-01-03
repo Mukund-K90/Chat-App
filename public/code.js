@@ -235,15 +235,11 @@
         }
     });
 
-    // Select elements
     const contextMenu = document.getElementById('context-menu');
-    const editMessageOption = document.getElementById('edit-message');
-    const deleteMessageOption = document.getElementById('delete-message');
     const cancelMenuOption = document.getElementById('cancel-menu');
 
-    let selectedMessage = null; // Track the currently selected message
+    let selectedMessage = null;
 
-    // Right-click handler for messages
     document.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         const target = e.target.closest('.message');
