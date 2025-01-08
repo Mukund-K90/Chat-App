@@ -5,15 +5,67 @@
 
     let uname;
 
-    app.querySelector(".join-screen #join-user").addEventListener('click', function () {
+    let roomCode;
+
+    app.querySelector(".join-screen #join-user").addEventListener('click', function (e) {
+        e.preventDefault();
+        let username = app.querySelector(".join-screen #username").value;
+        let chatCode = app.querySelector(".join-screen #chat-code").value;
+
+        if (username.length == 0 || chatCode.length == 0) {
+            return;
+        }
+
+        socket.emit('newuser', { username, chatCode });
+
+        uname = username;
+        roomCode = chatCode;
+
+        app.querySelector(".join-screen").classList.remove("active");
+        app.querySelector(".chat-screen").classList.add("active");
+    });
+
+
+    app.querySelector("#create-room").addEventListener('click', function () {
         let username = app.querySelector(".join-screen #username").value;
         if (username.length == 0) {
             return;
         }
-        socket.emit('newuser', username);
+
+        let randomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+
+        socket.emit('createRoom', { username, roomCode: randomCode });
+
         uname = username;
+        roomCode = randomCode;
+
+        app.querySelector(".join-screen #chat-code").value = randomCode;
+        // app.querySelector("#room-code").style.display = "block";
+        // app.querySelector("#generated-code").textContent = randomCode;
+
+
         app.querySelector(".join-screen").classList.remove("active");
         app.querySelector(".chat-screen").classList.add("active");
+    });
+    const copyButton = document.getElementById('copy-room-code');
+    const roomCodeText = document.getElementById('generated-code');
+
+    copyButton.addEventListener('click', function () {
+        if (navigator.clipboard) {
+            const roomCodeToCopy = roomCodeText.textContent;
+
+            navigator.clipboard.writeText(roomCodeToCopy).then(function () {
+                copyButton.textContent = "Copied!";
+                setTimeout(function () {
+                    copyButton.textContent = "Copy";
+                }, 2000);
+            }).catch(function (err) {
+                console.error('Error copying text: ', err);
+            });
+        } else {
+            console.error("Clipboard API is not supported on this browser.");
+            alert("Clipboard API is not supported in this environment. Please use a secure context.");
+        }
     });
 
     const messageInput = app.querySelector(".chat-screen #message-input");
@@ -34,6 +86,7 @@
             text: message,
             username: uname
         });
+
         socket.emit('chat', {
             text: message,
             username: uname
@@ -262,20 +315,5 @@
         selectedMessage = null;
         contextMenu.style.display = 'none';
     });
-
-    socket.on('edit-message', (data) => {
-        const message = document.querySelector(`.message[data-id="${data.id}"]`);
-        if (message) {
-            message.querySelector('.text').textContent = data.text;
-        }
-    });
-
-    socket.on('delete-message', (data) => {
-        const message = document.querySelector(`.message[data-id="${data.id}"]`);
-        if (message) {
-            message.remove();
-        }
-    });
-
 
 })();

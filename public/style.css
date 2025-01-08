@@ -11,6 +11,24 @@ body {
     justify-content: center;
 }
 
+.divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.divider hr {
+    flex-grow: 1;
+    border: none;
+    border-top: 1px dashed #000;
+    margin: 0 10px;
+}
+
+.divider p {
+    margin: 0;
+    white-space: nowrap;
+}
+
 .app {
     position: fixed;
     width: 100%;
@@ -74,6 +92,17 @@ body {
     cursor: pointer;
     outline: none;
     border: none;
+}
+
+#create-room {
+    padding: 10px 20px;
+    background: #eee;
+    color: #111;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #111;
+    font-weight: bold;
 }
 
 .chat-screen .header {
@@ -324,4 +353,18 @@ body {
 
 .context-menu ul li:hover {
     background: #f0f0f0;
+}
+
+.copy-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.copy-btn:hover {
+    background-color: #45a049;
 }

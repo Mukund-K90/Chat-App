@@ -6,56 +6,60 @@ const { format } = require("date-fns");
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-
 const io = require('socket.io')(server);
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', function (socket) {
-    socket.on('newuser', function (username) {
+
+    socket.on('createRoom', function ({ username, roomCode }) {
         socket.username = username;
-        socket.broadcast.emit('update', username + ` joined Today, ${format(new Date(), "h:mm a")}`);
+        socket.roomCode = roomCode;
+
+        socket.join(roomCode);
+        socket.emit('update', `You created the room ! code: ${roomCode}`);
+    });
+
+    socket.on('newuser', function ({ username, chatCode }) {
+        socket.username = username;
+        socket.roomCode = chatCode;
+
+        socket.join(chatCode);
+        socket.emit('update', `Welcome to the room`);
+        socket.broadcast.to(chatCode).emit('update', `${username} joined the room`);
+
+        // socket.broadcast.to(chatCode).emit('update', `${username} joined Today, ${format(new Date(), "h:mm a")}`);
+    });
+
+    socket.on('chat', function (message) {
+        socket.broadcast.to(socket.roomCode).emit('chat', message);
+    });
+
+    socket.on('file', (message) => {
+        socket.broadcast.to(socket.roomCode).emit('file', message);
+    });
+
+    socket.on('typing', function () {
+        socket.broadcast.to(socket.roomCode).emit('typing', socket.username);
     });
 
     socket.on('exituser', function () {
         if (socket.username) {
-            socket.broadcast.emit('update', socket.username + ` left Today, ${format(new Date(), "h:mm a")}`);
-        }
-    });
-
-    socket.on('chat', function (message) {
-        socket.broadcast.emit('chat', message);
-    });
-
-    socket.on('file', (message) => {
-        socket.broadcast.emit('file', message);
-    });
-
-    socket.on('typing', function () {
-        if (socket.username) {
-            socket.broadcast.emit('typing', socket.username);
+            socket.broadcast.to(socket.roomCode).emit('update', socket.username + ` left Today, ${format(new Date(), "h:mm a")}`);
         }
     });
 
     socket.on('stopTyping', function () {
-        if (socket.username) {
-            socket.broadcast.emit('stopTyping', socket.username);
-        }
+        socket.broadcast.to(socket.roomCode).emit('stopTyping', socket.username);
     });
+
     socket.on('disconnect', function () {
         if (socket.username) {
             socket.username = null;
         }
     });
-    socket.on('edit-message', (data) => {
-        socket.broadcast.emit('edit-message', data);
-    });
-
-    socket.on('delete-message', (data) => {
-        socket.broadcast.emit('delete-message', data);
-    });
 });
-
 
 app.post('/upload', upload.single('file'), (req, res) => {
     if (req.file) {
