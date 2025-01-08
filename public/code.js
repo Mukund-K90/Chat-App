@@ -47,26 +47,6 @@
         app.querySelector(".join-screen").classList.remove("active");
         app.querySelector(".chat-screen").classList.add("active");
     });
-    const copyButton = document.getElementById('copy-room-code');
-    const roomCodeText = document.getElementById('generated-code');
-
-    copyButton.addEventListener('click', function () {
-        if (navigator.clipboard) {
-            const roomCodeToCopy = roomCodeText.textContent;
-
-            navigator.clipboard.writeText(roomCodeToCopy).then(function () {
-                copyButton.textContent = "Copied!";
-                setTimeout(function () {
-                    copyButton.textContent = "Copy";
-                }, 2000);
-            }).catch(function (err) {
-                console.error('Error copying text: ', err);
-            });
-        } else {
-            console.error("Clipboard API is not supported on this browser.");
-            alert("Clipboard API is not supported in this environment. Please use a secure context.");
-        }
-    });
 
     const messageInput = app.querySelector(".chat-screen #message-input");
     messageInput.addEventListener('input', function () {
