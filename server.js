@@ -11,23 +11,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const rooms = new Set();
+
 io.on('connection', function (socket) {
 
     socket.on('createRoom', function ({ username, roomCode }) {
+        rooms.add(roomCode);
         socket.username = username;
         socket.roomCode = roomCode;
 
         socket.join(roomCode);
         socket.emit('update', `You created the room ! code: ${roomCode}`);
+        socket.emit('roomCode', roomCode);
     });
 
     socket.on('newuser', function ({ username, chatCode }) {
-        socket.username = username;
-        socket.roomCode = chatCode;
+        if (!rooms.has(chatCode)) {
+            return socket.emit('error', 'Chat Not Found! Please Create New Chat Room');
+        }
+        else {
+            socket.username = username;
+            socket.roomCode = chatCode;
 
-        socket.join(chatCode);
-        socket.emit('update', `Welcome to the room`);
-        socket.broadcast.to(chatCode).emit('update', `${username} joined the room`);
+            socket.join(chatCode);
+            socket.emit('update', `Welcome to the room`);
+            socket.broadcast.to(chatCode).emit('update', `${username} joined the room`);
+            socket.emit('validRoom');
+        }
 
         // socket.broadcast.to(chatCode).emit('update', `${username} joined Today, ${format(new Date(), "h:mm a")}`);
     });

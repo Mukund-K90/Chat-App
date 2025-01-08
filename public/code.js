@@ -4,7 +4,6 @@
     const socket = io();
 
     let uname;
-
     let roomCode;
 
     app.querySelector(".join-screen #join-user").addEventListener('click', function (e) {
@@ -18,11 +17,17 @@
 
         socket.emit('newuser', { username, chatCode });
 
-        uname = username;
-        roomCode = chatCode;
+        socket.on('error', (message) => {
+            alert(message);
+        });
 
-        app.querySelector(".join-screen").classList.remove("active");
-        app.querySelector(".chat-screen").classList.add("active");
+        socket.on('validRoom', function () {
+            uname = username;
+            roomCode = chatCode;
+
+            app.querySelector(".join-screen").classList.remove("active");
+            app.querySelector(".chat-screen").classList.add("active");
+        });
     });
 
 
@@ -40,9 +45,6 @@
         roomCode = randomCode;
 
         app.querySelector(".join-screen #chat-code").value = randomCode;
-        // app.querySelector("#room-code").style.display = "block";
-        // app.querySelector("#generated-code").textContent = randomCode;
-
 
         app.querySelector(".join-screen").classList.remove("active");
         app.querySelector(".chat-screen").classList.add("active");

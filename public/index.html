@@ -1,87 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
-</head>
-
-<body>
-    <div class="app">
-        <div class="screen join-screen active">
-            <div class="form">
-                <h2>Join Chatroom</h2>
-                <form id="join-form">
-                    <div class="form-input">
-                        <label>Username</label>
-                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
-                        <label>Chat Code</label>
-                        <input type="text" id="chat-code" name="chatCode" placeholder="Enter your Chat Code" required>
-                    </div>
-                    <div class="form-input">
-                        <button type="submit" id="join-user">Join</button>
-                        <div class="divider">
-                            <hr>
-                            <p>or</p>
-                            <hr>
-                        </div>
-                    </div>
-                </form>
-                <button id="create-room">Create Room <i class="fa-solid fa-users"></i></button>
-            </div>
-        </div>
-        <div class="screen chat-screen ">
-            <div class="header">
-                <div class="logo">Chatroom</div>
-                <button id="exit-chat">Exit</button>
-            </div>
-            <div class="messages">
-            </div>
-            <div class="typebox">
-                <div id="emoji-picker-container" style="position: absolute; bottom: 60px; left: 10px; display: none;">
-                </div>
-                <i id="emoji-button" class="fa-solid fa-face-smile"></i>
-                <input type="text" id="message-input" autocomplete="off">
-                <input type="file" id="fileInput" style="display: none;">
-                <i id="send-file" class="fa-solid fa-paperclip"
-                    onclick="document.getElementById('fileInput').click()"></i>
-                <button id="send-message">Send</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="fileModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Preview File</h2>
-            <div id="filePreview"></div>
-            <input type="text" id="fileCaption" placeholder="Enter caption">
-            <button id="uploadFile">Send File</button>
-        </div>
-    </div>
-
-    <div id="context-menu" class="context-menu" style="display: none;">
-        <ul>
-            <li id="edit-message">Edit</li>
-            <li id="delete-message">Delete</li>
-            <li id="cancel-menu">Cancel</li>
-        </ul>
-    </div>
-
-
-    <script type="text/javascript" src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="./code.js"></script>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,15 +15,17 @@
 
 <body>
     <div class="app">
-        <div class="screen join-screen active">
+        <div class="screen join-screen ">
             <div class="form">
                 <h2>Join Chatroom</h2>
                 <form id="join-form">
                     <div class="form-input">
                         <label>Username</label>
-                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        <input type="text" id="username" name="username" placeholder="Enter your username"
+                            autocomplete="off" required>
                         <label>Chat Code</label>
-                        <input type="text" id="chat-code" name="chatCode" placeholder="Enter your Chat Code" required>
+                        <input type="text" id="chat-code" name="chatCode" placeholder="Enter your Chat Code"
+                            autocomplete="off" required>
                     </div>
                     <div class="form-input">
                         <button type="submit" id="join-user">Join</button>
@@ -121,13 +39,9 @@
                 <button id="create-room">Create Room <i class="fa-solid fa-users"></i></button>
             </div>
         </div>
-        <div class="screen chat-screen">
+        <div class="screen chat-screen active">
             <div class="header">
                 <div class="logo">Chatroom</div>
-                <!-- <div id="room-code">
-                    <span id="generated-code" style="color: white;">******</span>
-                    <button id="copy-room-code" class="copy-btn">Copy</button>
-                </div> -->
                 <button id="exit-chat">Exit</button>
             </div>
             <div class="messages">
